@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+/** @use HasFactory<\Database\Factories\KursFactory> */
 class Kurs extends Model
 {
     use HasFactory;
@@ -13,14 +15,21 @@ class Kurs extends Model
         'opis',
         'profesor_id',
     ];
-    public function komentari(){
+
+    public function komentari()
+    {
          return $this->hasMany(Komentar::class);
     }
-    public function profesor(){
+
+    public function profesor()
+    {
         return $this->belongsTo(Profesor::class);
     }
-    public function korisnici(){
+
+    public function korisnici()
+    {
         return $this->belongsToMany(Korisnik::class);
     }
+
     protected $table = 'kurs';
 }

@@ -1,9 +1,11 @@
 <?php
 
 namespace App\Models;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/** @use HasFactory<\Database\Factories\KomentarFactory> */
 class Komentar extends Model
 {
     use HasFactory;
@@ -13,10 +15,14 @@ class Komentar extends Model
         'korisnik_id',
         'kurs_id',
     ];
-    public function kurs(){
+
+    public function kurs()
+    {
         return $this->belongsTo(Kurs::class);
     }
-    public function korisnik(){
+
+    public function korisnik()
+    {
         return $this->belongsTo(Korisnik::class);
     }
 }

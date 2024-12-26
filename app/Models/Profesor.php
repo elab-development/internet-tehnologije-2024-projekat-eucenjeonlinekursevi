@@ -1,10 +1,11 @@
 <?php
 
 namespace App\Models;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/** @use HasFactory<\Database\Factories\ProfesorFactory> */
 class Profesor extends Model
 {
     use HasFactory;
@@ -16,7 +17,9 @@ class Profesor extends Model
         'username',
         'password',
     ];
-    public function kursevi(){
+
+    public function kursevi()
+    {
         return $this->hasMany(Kurs::class);
     }
 }
