@@ -55,6 +55,6 @@ class KursController extends Controller
             $kurs->delete();
             return response()->json(['message' => 'Kurs deleted']);
         }
-        return response()->json(['message' => 'Kurs not found'], 404);
+        return response()->json(['message'=> 'Kurs not found'],404);
     }
 }
