@@ -14,7 +14,7 @@ class AuthController extends Controller
     public function registerKorisnik(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
+            'username' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:korisniks',
             'password' => 'required|string|min:8|confirmed',
         ]);
@@ -24,7 +24,7 @@ class AuthController extends Controller
         }
 
         $korisnik = Korisnik::create([
-            'name' => $request->name,
+            'username' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
@@ -35,7 +35,7 @@ class AuthController extends Controller
     public function registerProfesor(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
+            'username' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:profesors',
             'password' => 'required|string|min:8|confirmed',
         ]);
@@ -45,7 +45,7 @@ class AuthController extends Controller
         }
 
         $profesor = Profesor::create([
-            'name' => $request->name,
+            'username' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
@@ -55,9 +55,9 @@ class AuthController extends Controller
 
     public function loginKorisnik(Request $request)
     {
-        $credentials = $request->only('email', 'password');
+        $podaci = $request->only('email', 'password');
 
-        if (Auth::attempt($credentials)) {
+        if (Auth::attempt($podaci)) {
             $request->session()->regenerate();
             return response()->json(['message' => 'Login successful'], 200);
         }
@@ -67,9 +67,9 @@ class AuthController extends Controller
 
     public function loginProfesor(Request $request)
     {
-        $credentials = $request->only('email', 'password');
+        $podaci = $request->only('email', 'password');
 
-        if (Auth::guard('profesor')->attempt($credentials)) {
+        if (Auth::guard('profesor')->attempt($podaci)) {
             $request->session()->regenerate();
             return response()->json(['message' => 'Login successful'], 200);
         }

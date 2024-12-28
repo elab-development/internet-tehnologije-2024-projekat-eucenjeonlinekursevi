@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\KursController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\SearchController;
 
 Route::get('/korisnik', function (Request $request) {
     return response()->json($request->user());
@@ -26,6 +27,7 @@ Route::post('login/profesor', [AuthController::class, 'loginProfesor']);
 Route::post('logout', [AuthController::class, 'logout']);
 
 Route::post('/password/reset', [App\Http\Controllers\PasswordResetController::class, 'reset']);
+Route::get('/search', [SearchController::class, 'search']);
 
 Route::fallback(function () {
     return response()->json([
