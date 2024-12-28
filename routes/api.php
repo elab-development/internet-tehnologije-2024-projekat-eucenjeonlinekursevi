@@ -25,6 +25,8 @@ Route::post('login/profesor', [AuthController::class, 'loginProfesor']);
 
 Route::post('logout', [AuthController::class, 'logout']);
 
+Route::post('/password/reset', [App\Http\Controllers\PasswordResetController::class, 'reset']);
+
 Route::fallback(function () {
     return response()->json([
         'error' => 'Not Found'
