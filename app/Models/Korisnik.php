@@ -15,17 +15,17 @@ class Korisnik extends Model
         'prezime',
         'email',
         'username',
-        'lozinka',
+        'password',
     ];
 
     protected $hidden = [
-        'lozinka',
+        'password',
     ];
 
     protected function casts(): array
     {
         return [
-            'lozinka' => 'hashed',
+            'password' => 'hashed',
         ];
     }
 

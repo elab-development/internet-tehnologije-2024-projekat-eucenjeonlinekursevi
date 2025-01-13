@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /** @use HasFactory<\Database\Factories\KomentarFactory> */
+
 class Komentar extends Model
 {
     use HasFactory;

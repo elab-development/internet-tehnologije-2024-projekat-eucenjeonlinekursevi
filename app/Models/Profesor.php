@@ -18,6 +18,17 @@ class Profesor extends Model
         'password',
     ];
 
+    protected $hidden = [
+        'password',
+    ];
+
+    protected function casts(): array
+    {
+        return [
+            'password' => 'hashed',
+        ];
+    }
+
     public function kursevi()
     {
         return $this->hasMany(Kurs::class);
