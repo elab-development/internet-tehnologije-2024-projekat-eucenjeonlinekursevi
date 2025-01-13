@@ -18,6 +18,17 @@ class Korisnik extends Model
         'lozinka',
     ];
 
+    protected $hidden = [
+        'lozinka',
+    ];
+
+    protected function casts(): array
+    {
+        return [
+            'lozinka' => 'hashed',
+        ];
+    }
+
     public function kursevi()
     {
         return $this->belongsToMany(Kurs::class);
