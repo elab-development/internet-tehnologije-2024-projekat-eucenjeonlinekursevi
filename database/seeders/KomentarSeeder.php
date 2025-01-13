@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-
+use App\Models\Komentar;
 class KomentarSeeder extends Seeder
 {
     /**
@@ -12,6 +12,6 @@ class KomentarSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        Komentar::factory(7)->create();
     }
 }

@@ -1,23 +1,22 @@
 <?php
-
 namespace Database\Factories;
 
+use App\Models\Korisnik;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Faker\Generator as Faker;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Korisnik>
- */
 class KorisnikFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
-    public function definition(): array
+    protected $model = Korisnik::class;
+
+    public function definition()
     {
         return [
-            //
+            'ime' => $this->faker->firstName,
+            'prezime' => $this->faker->lastName,
+            'username' => $this->faker->unique()->userName,
+            'email' => $this->faker->unique()->safeEmail,
+            'password' => bcrypt('lozinka123'),
         ];
     }
 }

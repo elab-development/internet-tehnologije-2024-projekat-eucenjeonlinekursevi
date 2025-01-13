@@ -17,7 +17,8 @@ class ProfesorFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'email' => $this->faker->unique()->safeEmail,
+            'password' => 'password'
         ];
     }
 }
