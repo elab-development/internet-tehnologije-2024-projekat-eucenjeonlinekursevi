@@ -6,6 +6,7 @@ use App\Http\Controllers\KursController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\KomentarController;
 
 Route::get('/korisnik', function (Request $request) {
     return response()->json($request->user());
@@ -30,6 +31,13 @@ Route::middleware('auth:sanctum')->post('logout', [AuthController::class, 'logou
 
 Route::post('/password/reset', [PasswordResetController::class, 'reset']);
 Route::get('/search', [SearchController::class, 'search']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('komentari', [KomentarController::class, 'store']);
+    Route::get('komentari/{id}', [KomentarController::class, 'show']);
+    Route::put('komentari/{id}', [KomentarController::class, 'update']);
+    Route::delete('komentari/{id}', [KomentarController::class, 'destroy']);
+});
 
 Route::fallback(function () {
     return response()->json([
