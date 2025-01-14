@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Sanctum\HasApiTokens;
 
-/** @use HasFactory<\Database\Factories\ProfesorFactory> */
+
 class Profesor extends Model
 {
     use HasFactory;
