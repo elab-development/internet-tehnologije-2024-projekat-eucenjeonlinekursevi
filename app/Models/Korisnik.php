@@ -1,13 +1,14 @@
 <?php
-
 namespace App\Models;
-
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /** @use HasFactory<\Database\Factories\KorisnikFactory> */
-class Korisnik extends Model
+class Korisnik extends Authenticatable
 {
+    use HasApiTokens;
     use HasFactory;
 
     protected $fillable = [

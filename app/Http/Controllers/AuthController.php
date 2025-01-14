@@ -13,31 +13,32 @@ class AuthController extends Controller
 {
     public function registerKorisnik(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'username' => 'required|string|max:255',
+        $validated = $request->validate([
+            'ime' => 'required|string|max:255',
+            'prezime' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:korisniks',
-            'password' => 'required|string|min:8|confirmed',
+            'username' => 'required|string|max:255|unique:korisniks',
+            'password' => 'required|string|confirmed|min:8',
         ]);
-
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
-        }
-
+    
         $korisnik = Korisnik::create([
-            'username' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'ime' => $validated['ime'],
+            'prezime' => $validated['prezime'],
+            'email' => $validated['email'],
+            'username' => $validated['username'],
+            'password' => Hash::make($validated['password']),
         ]);
-
-        return response()->json($korisnik, 201);
+    
+        return response()->json([
+            'message' => 'User registered successfully',
+        ], 201);
     }
 
     public function registerProfesor(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'username' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:profesors',
-            'password' => 'required|string|min:8|confirmed',
+            'password' => 'required|string|min:8',
         ]);
 
         if ($validator->fails()) {
@@ -45,7 +46,6 @@ class AuthController extends Controller
         }
 
         $profesor = Profesor::create([
-            'username' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
@@ -57,21 +57,34 @@ class AuthController extends Controller
     {
         $podaci = $request->only('email', 'password');
 
-        if (Auth::attempt($podaci)) {
-            $request->session()->regenerate();
-            return response()->json(['message' => 'Login successful'], 200);
+        $korisnik = Korisnik::where('email', $podaci['email'])->first();
+    
+        if ($korisnik && Hash::check($podaci['password'], $korisnik->password)) {
+            $token = $korisnik->createToken('App')->plainTextToken;
+    
+            return response()->json([
+                'message' => 'Login successful',
+                'token' => $token,
+            ], 200);
         }
-
+    
         return response()->json(['error' => 'Unauthorized'], 401);
     }
 
+    
     public function loginProfesor(Request $request)
     {
         $podaci = $request->only('email', 'password');
 
-        if (Auth::guard('profesor')->attempt($podaci)) {
-            $request->session()->regenerate();
-            return response()->json(['message' => 'Login successful'], 200);
+        $profesor = Profesor::where('email', $podaci['email'])->first();
+
+        if ($profesor && Hash::check($podaci['password'], $profesor->password)) {
+            $token = $profesor->createToken('App')->plainTextToken;
+
+            return response()->json([
+                'message' => 'Login successful',
+                'token' => $token,
+            ], 200);
         }
 
         return response()->json(['error' => 'Unauthorized'], 401);
@@ -79,10 +92,8 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        Auth::logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return response()->json(['message' => 'Logout successful'], 200);
+        $user=$request->user();
+        $user->currentAccessToken()->delete();
+        return response()->json(['message'=>'Logout successful.'],200);
     }
 }
