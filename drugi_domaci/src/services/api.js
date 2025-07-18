@@ -20,7 +20,7 @@ export const loginUser = async (credentials, role='korisnik') => {
     `${API_URL}/login/korisnik` : 
     `${API_URL}/login/profesor`;
     
-  const response = await fetch(`${API_URL}/login`, {
+  const response = await fetch(url, {
     method: 'POST',
     body: JSON.stringify(credentials),
     headers: {

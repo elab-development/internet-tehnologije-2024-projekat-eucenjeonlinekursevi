@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { fetchKursevi } from './services/api';
 import KursCard from './KursCard';
 import './HomePage.css';
+import Modal from './Modal';
 
 
 const HomePage = () => {
@@ -9,7 +10,18 @@ const HomePage = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredKursevi, setFilteredKursevi] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedKurs, setSelectedKurs] = useState(null);
 
+  const openModal = (kurs) => {
+  setSelectedKurs(kurs);
+  setShowModal(true);
+};
+
+  const closeModal = () => {
+  setShowModal(false);
+  setSelectedKurs(null);
+};
 
   useEffect(() => {
     const getKursevi = async () => {
@@ -40,11 +52,11 @@ const HomePage = () => {
       <h1>Dobrodošli na kurseve</h1>
 
       <input
-      type="text"
-      placeholder="Pretrazi kurseve po nazivu"
-      value={searchTerm}
-      onChange={(e) => setSearchTerm(e.target.value)}
-      style={{ padding: '8px', width: '100%', marginBottom: '20px' }}
+        type="text"
+        placeholder="Pretraži kurseve po nazivu"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        style={{ padding: '8px', width: '100%', marginBottom: '20px' }}
       />
 
       <div className="kursevi-list">
@@ -52,10 +64,22 @@ const HomePage = () => {
           <p>Nema dostupnih kurseva</p>
         ) : (
           filteredKursevi.map((kurs) => (
-          <KursCard key={kurs.id} kurs={kurs} />
-        ))
+            <KursCard 
+              key={kurs.id} 
+              kurs={kurs} 
+              onMoreInfo={() => openModal(kurs)} 
+            />
+          ))
         )}
       </div>
+
+      {showModal && selectedKurs && (
+        <Modal onClose={closeModal}>
+          <h2>{selectedKurs.naziv}</h2>
+          <p>{selectedKurs.opis}</p>
+          <button onClick={closeModal}>Zatvori</button>
+        </Modal>
+      )}
     </div>
   );
 };
