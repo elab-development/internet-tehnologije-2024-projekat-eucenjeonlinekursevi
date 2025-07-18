@@ -15,7 +15,11 @@ export const fetchProfesor = async (id) => {
   return await response.json();
 };
 
-export const loginUser = async (credentials) => {
+export const loginUser = async (credentials, role='korisnik') => {
+    const url = role === 'korisnik' ? 
+    `${API_URL}/login/korisnik` : 
+    `${API_URL}/login/profesor`;
+    
   const response = await fetch(`${API_URL}/login`, {
     method: 'POST',
     body: JSON.stringify(credentials),
