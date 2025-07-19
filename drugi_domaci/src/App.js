@@ -5,6 +5,7 @@ import LoginPage from "./LoginPage";
 import "./App.css";
 import KursPage from "./KursPage";
 import RegisterPage from "./RegisterPage";
+import Breadcrumbs from "./Breadcrumbs";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/kursevi/:id" element={<KursPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/kursevi" element={<KurseviPage />} />
         <Route path="*" element={<NotFoundPage />} />
 
       </Routes>
