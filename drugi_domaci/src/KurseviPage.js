@@ -12,7 +12,7 @@ const KurseviPage = () => {
   useEffect(() => {
     const fetchKursevi = async () => {
       try {
-        const response = await axios.get('/api/kursevi');
+        const response = await fetch('/api/kursevi');
         setKursevi(response.data);
       } catch (error) {
         console.error("Greška pri učitavanju kurseva:", error);

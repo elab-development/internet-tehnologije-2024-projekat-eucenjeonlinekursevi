@@ -16,7 +16,7 @@ function App() {
           <li><Link to="/login">Login</Link></li>
         </ul>
       </nav>
-
+      <Breadcrumbs/>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />

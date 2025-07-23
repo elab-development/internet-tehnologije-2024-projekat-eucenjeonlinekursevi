@@ -3,13 +3,11 @@ import { fetchKursevi } from './services/api';
 import KursCard from './KursCard';
 import './HomePage.css';
 import Modal from './Modal';
-
+import useSearch from './useSearch';
 
 const HomePage = () => {
   const [kursevi, setKursevi] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filteredKursevi, setFilteredKursevi] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedKurs, setSelectedKurs] = useState(null);
 
@@ -38,12 +36,7 @@ const HomePage = () => {
     getKursevi();
   }, []);
 
-  useEffect(() => {
-  const filtered = kursevi.filter(kurs =>
-    kurs.naziv.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-  setFilteredKursevi(filtered);
-}, [searchTerm, kursevi]);
+  const { searchTerm, setSearchTerm, filteredItems } = useSearch(kursevi, 'naziv');
 
   if (loading) return <div>Učitavanje...</div>;
 
@@ -60,10 +53,10 @@ const HomePage = () => {
       />
 
       <div className="kursevi-list">
-        {filteredKursevi.length === 0 ? (
+        {filteredItems.length === 0 ? (
           <p>Nema dostupnih kurseva</p>
         ) : (
-          filteredKursevi.map((kurs) => (
+          filteredItems.map((kurs) => (
             <KursCard 
               key={kurs.id} 
               kurs={kurs} 

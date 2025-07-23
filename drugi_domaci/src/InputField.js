@@ -17,7 +17,7 @@ const InputField = ({
       placeholder={placeholder}
       name={name}
       required={required}
-      className={`input-field ${className}`}
+      className={`input-field ${styleClass}`}
     />
   );
 };
