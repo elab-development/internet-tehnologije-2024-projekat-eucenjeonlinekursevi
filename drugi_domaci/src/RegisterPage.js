@@ -72,7 +72,7 @@ const RegisterPage = () => {
   };
 
   return (
-    <div>
+    <div className="register-container">
       <h1>Registracija</h1>
       <select value={role} onChange={(e) => setRole(e.target.value)}>
         <option value="korisnik">Korisnik</option>

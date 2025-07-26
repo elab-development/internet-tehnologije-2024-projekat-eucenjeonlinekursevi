@@ -32,7 +32,7 @@ const navigate=useNavigate();
   };
 
   return (
-    <div>
+    <div className='auth-container'>
       <h1>Login</h1>
 
       <div>

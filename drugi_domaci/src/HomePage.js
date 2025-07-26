@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { fetchKursevi } from './services/api';
-import KursCard from './KursCard';
+import KursCard from './KursCardPage';
 import './HomePage.css';
 import Modal from './Modal';
 import useSearch from './useSearch';
