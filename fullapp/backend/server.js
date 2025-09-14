@@ -5,6 +5,7 @@ import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import { connectDB } from './db.js';
 import authRoutes from './routes/auth.routes.js';
+import courseRoutes from './routes/course.routes.js';
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use(cookieParser());
 app.use(morgan('dev'));
 
 app.use('/api/auth', authRoutes);
+app.use('/api/courses', courseRoutes);
 
 const PORT = process.env.PORT || 4000;
 
