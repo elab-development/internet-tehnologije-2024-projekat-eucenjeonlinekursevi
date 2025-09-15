@@ -128,7 +128,7 @@ export default function AdminCourses() {
         </>
       )}
 
-      {/* Modal: Form */}
+      {/* Modal: Form (details + text sections) */}
       {showForm && (
         <div className='fixed inset-0 z-50 grid place-items-center bg-black/40 p-4'>
           <div className='w-full max-w-2xl rounded-xl bg-white p-6 shadow-xl'>
@@ -139,20 +139,9 @@ export default function AdminCourses() {
               <button
                 onClick={() => setShowForm(false)}
                 className='rounded-md p-2 hover:shadow'
+                aria-label='Close'
               >
-                <svg
-                  className='h-5 w-5'
-                  viewBox='0 0 24 24'
-                  stroke='currentColor'
-                  fill='none'
-                  strokeWidth='2'
-                >
-                  <path
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    d='M6 18L18 6M6 6l12 12'
-                  />
-                </svg>
+                ✕
               </button>
             </div>
             <CourseForm
@@ -179,7 +168,10 @@ export default function AdminCourses() {
       {resourceCourse && (
         <CourseResourcesManager
           course={resourceCourse}
-          onClose={() => setResourceCourse(null)}
+          onClose={async (refresh) => {
+            setResourceCourse(null);
+            if (refresh) await load();
+          }}
         />
       )}
     </div>
