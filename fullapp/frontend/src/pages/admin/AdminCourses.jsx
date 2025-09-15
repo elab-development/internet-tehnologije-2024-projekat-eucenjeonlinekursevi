@@ -7,6 +7,7 @@ import CourseForm from '../../components/admin/CourseForm';
 import ConfirmDialog from '../../components/admin/ConfirmDialog';
 import Pagination from '../../components/common/Pagination';
 import CourseResourcesManager from '../../components/admin/CourseResourcesManager';
+import CourseTestsManager from '../../components/admin/CourseTestsManager';
 
 export default function AdminCourses() {
   const [items, setItems] = useState([]);
@@ -25,6 +26,7 @@ export default function AdminCourses() {
   const [toDelete, setToDelete] = useState(null);
 
   const [resourceCourse, setResourceCourse] = useState(null);
+  const [testsCourse, setTestsCourse] = useState(null);
 
   const headerTitle = useMemo(() => 'Manage Courses', []);
 
@@ -51,7 +53,6 @@ export default function AdminCourses() {
     setEditing(null);
     setShowForm(true);
   };
-
   const openEdit = (course) => {
     setEditing(course);
     setShowForm(true);
@@ -91,7 +92,7 @@ export default function AdminCourses() {
         onCta={openCreate}
       />
 
-      {/* Search bar */}
+      {/* Search */}
       <div className='mb-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-2'>
         <input
           placeholder='Search courses…'
@@ -112,6 +113,7 @@ export default function AdminCourses() {
           {err}
         </div>
       )}
+
       {loading ? (
         <div className='grid place-items-center h-40 text-gray-600'>
           Loading…
@@ -123,12 +125,13 @@ export default function AdminCourses() {
             onEdit={openEdit}
             onDelete={onAskDelete}
             onResources={(c) => setResourceCourse(c)}
+            onTests={(c) => setTestsCourse(c)}
           />
           <Pagination page={page} pages={pages} onPage={setPage} />
         </>
       )}
 
-      {/* Modal: Form */}
+      {/* Course form modal */}
       {showForm && (
         <div className='fixed inset-0 z-50 grid place-items-center bg-black/40 p-4'>
           <div className='w-full max-w-2xl rounded-xl bg-white p-6 shadow-xl'>
@@ -139,20 +142,9 @@ export default function AdminCourses() {
               <button
                 onClick={() => setShowForm(false)}
                 className='rounded-md p-2 hover:shadow'
+                aria-label='Close'
               >
-                <svg
-                  className='h-5 w-5'
-                  viewBox='0 0 24 24'
-                  stroke='currentColor'
-                  fill='none'
-                  strokeWidth='2'
-                >
-                  <path
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    d='M6 18L18 6M6 6l12 12'
-                  />
-                </svg>
+                ✕
               </button>
             </div>
             <CourseForm
@@ -164,7 +156,7 @@ export default function AdminCourses() {
         </div>
       )}
 
-      {/* Modal: Confirm delete */}
+      {/* Delete confirm */}
       <ConfirmDialog
         open={confirmOpen}
         title='Delete course?'
@@ -175,11 +167,25 @@ export default function AdminCourses() {
         onCancel={() => setConfirmOpen(false)}
       />
 
-      {/* Modal: Manage resources */}
+      {/* Resources modal */}
       {resourceCourse && (
         <CourseResourcesManager
           course={resourceCourse}
-          onClose={() => setResourceCourse(null)}
+          onClose={async (refresh) => {
+            setResourceCourse(null);
+            if (refresh) await load();
+          }}
+        />
+      )}
+
+      {/* Tests modal */}
+      {testsCourse && (
+        <CourseTestsManager
+          course={testsCourse}
+          onClose={async (refresh) => {
+            setTestsCourse(null);
+            if (refresh) await load();
+          }}
         />
       )}
     </div>

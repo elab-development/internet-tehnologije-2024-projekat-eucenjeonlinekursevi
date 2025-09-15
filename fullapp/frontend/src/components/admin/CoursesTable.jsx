@@ -1,6 +1,12 @@
-import { FilePlus2, Edit3, Trash2 } from 'lucide-react';
+import { FilePlus2, Edit3, Trash2, ListChecks } from 'lucide-react';
 
-export default function CoursesTable({ items, onEdit, onDelete, onResources }) {
+export default function CoursesTable({
+  items,
+  onEdit,
+  onDelete,
+  onResources,
+  onTests,
+}) {
   return (
     <div className='overflow-hidden rounded-xl bg-white shadow'>
       <table className='min-w-full divide-y divide-gray-100'>
@@ -43,6 +49,14 @@ export default function CoursesTable({ items, onEdit, onDelete, onResources }) {
               </td>
               <td className='px-4 py-3'>
                 <div className='flex justify-end gap-2'>
+                   <button
+                    onClick={() => onTests(c)}
+                    className='inline-flex items-center gap-1 rounded-md px-3 py-1.5 text-gray-700 shadow-sm hover:shadow'
+                    title='Manage tests'
+                  >
+                    <ListChecks className='h-4 w-4' />
+                    Tests
+                  </button>
                   <button
                     onClick={() => onResources(c)}
                     className='inline-flex items-center gap-1 rounded-md px-3 py-1.5 text-gray-700 shadow-sm hover:shadow'

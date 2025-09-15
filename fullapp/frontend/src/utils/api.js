@@ -3,16 +3,12 @@ const API_URL = import.meta.env.VITE_API_URL || '';
 async function request(path, { method = 'GET', body, headers } = {}) {
   const res = await fetch(`${API_URL}${path}`, {
     method,
-    headers: {
-      'Content-Type': 'application/json',
-      ...(headers || {}),
-    },
+    headers: { 'Content-Type': 'application/json', ...(headers || {}) },
     credentials: 'include',
     body: body ? JSON.stringify(body) : undefined,
   });
-
-  const contentType = res.headers.get('content-type') || '';
-  const json = contentType.includes('application/json')
+  const ct = res.headers.get('content-type') || '';
+  const json = ct.includes('application/json')
     ? await res.json().catch(() => null)
     : null;
   if (!res.ok)
@@ -21,14 +17,11 @@ async function request(path, { method = 'GET', body, headers } = {}) {
 }
 
 export const api = {
-  // auth
   me: () => request('/api/auth/me'),
-  login: (data) => request('/api/auth/login', { method: 'POST', body: data }),
-  register: (data) =>
-    request('/api/auth/register', { method: 'POST', body: data }),
+  login: (d) => request('/api/auth/login', { method: 'POST', body: d }),
+  register: (d) => request('/api/auth/register', { method: 'POST', body: d }),
   logout: () => request('/api/auth/logout', { method: 'POST' }),
 
-  // courses
   courses: {
     list: ({ page = 1, limit = 10, q = '', all = true } = {}) =>
       request(
@@ -37,12 +30,11 @@ export const api = {
         }`
       ),
     get: (id) => request(`/api/courses/${id}`),
-    create: (data) => request('/api/courses', { method: 'POST', body: data }),
-    update: (id, data) =>
-      request(`/api/courses/${id}`, { method: 'PUT', body: data }),
+    create: (d) => request('/api/courses', { method: 'POST', body: d }),
+    update: (id, d) =>
+      request(`/api/courses/${id}`, { method: 'PUT', body: d }),
     remove: (id) => request(`/api/courses/${id}`, { method: 'DELETE' }),
 
-    // uploads (multipart/form-data)
     uploadResources: async (id, files) => {
       const form = new FormData();
       [...files].forEach((f) => form.append('files', f));
@@ -61,5 +53,19 @@ export const api = {
         method: 'DELETE',
         body: { url },
       }),
+  },
+
+  tests: {
+    listByCourse: ({ courseId, page = 1, limit = 50, all = true }) =>
+      request(
+        `/api/tests?course=${courseId}&page=${page}&limit=${limit}&all=${
+          all ? '1' : '0'
+        }`
+      ),
+    get: (id, { withAnswers = true } = {}) =>
+      request(`/api/tests/${id}${withAnswers ? '?withAnswers=1' : ''}`),
+    create: (d) => request('/api/tests', { method: 'POST', body: d }),
+    update: (id, d) => request(`/api/tests/${id}`, { method: 'PUT', body: d }),
+    remove: (id) => request(`/api/tests/${id}`, { method: 'DELETE' }),
   },
 };
