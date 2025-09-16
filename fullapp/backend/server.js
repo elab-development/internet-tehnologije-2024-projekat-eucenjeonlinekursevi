@@ -7,6 +7,7 @@ import { connectDB } from './db.js';
 import authRoutes from './routes/auth.routes.js';
 import courseRoutes from './routes/course.routes.js';
 import testRoutes from './routes/test.routes.js';
+import certificateRoutes from './routes/certificate.routes.js';
 const app = express();
 
 app.use(
@@ -22,6 +23,8 @@ app.use(morgan('dev'));
 app.use('/api/auth', authRoutes);
 app.use('/api/courses', courseRoutes);
 app.use('/api/tests', testRoutes);
+app.use('/api/certificates', certificateRoutes);
+
 const PORT = process.env.PORT || 4000;
 
 try {

@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import Test from '../models/Test.js';
 import Course from '../models/Course.js';
+import Certificate from '../models/Certificate.js';
 
 function isValidId(id) {
   return mongoose.Types.ObjectId.isValid(id);
@@ -183,5 +184,66 @@ export async function deleteTest(req, res) {
   } catch (err) {
     console.error('deleteTest error:', err);
     res.status(500).json({ message: 'Failed to delete test' });
+  }
+}
+
+export async function submitTest(req, res) {
+  try {
+    const { id } = req.params;
+    const { answers } = req.body || {};
+    if (!isValidId(id)) return res.status(400).json({ message: 'Invalid id' });
+    if (!Array.isArray(answers))
+      return res
+        .status(400)
+        .json({
+          message: 'answers must be an array of selected option indexes',
+        });
+
+    // Load full test with answers (admin only can get via GET; here we use it server-side)
+    const test = await Test.findById(id).populate('course', '_id title');
+    if (!test) return res.status(404).json({ message: 'Test not found' });
+    if (!test.isActive)
+      return res.status(403).json({ message: 'Test is not active' });
+
+    const qs = test.questions || [];
+    const total = qs.reduce((sum, q) => sum + (q.points || 0), 0);
+
+    // normalize answers length; missing answers treated as incorrect
+    let score = 0;
+    for (let i = 0; i < qs.length; i++) {
+      const q = qs[i];
+      const a = answers[i];
+      if (typeof a === 'number' && a === q.correctIndex) {
+        score += q.points || 0;
+      }
+    }
+
+    const pct = total > 0 ? (score / total) * 100 : 100;
+    const passed = pct >= (test.passingScorePercent ?? 60);
+
+    let certificate = null;
+    if (passed) {
+      // try to create certificate if one doesn't exist yet (unique by user+course)
+      const existing = await Certificate.findOne({
+        user: req.user._id,
+        course: test.course._id,
+      });
+      if (!existing) {
+        const created = await Certificate.create({
+          user: req.user._id,
+          course: test.course._id,
+          test: test._id,
+          score,
+        });
+        certificate = await Certificate.findById(created._id).lean();
+      } else {
+        certificate = existing.toObject ? existing.toObject() : existing;
+      }
+    }
+
+    res.json({ passed, score, totalPoints: total, certificate });
+  } catch (err) {
+    console.error('submitTest error:', err);
+    res.status(500).json({ message: 'Failed to submit test' });
   }
 }
