@@ -56,16 +56,24 @@ export const api = {
   },
 
   tests: {
-    listByCourse: ({ courseId, page = 1, limit = 50, all = true }) =>
+    listByCourse: ({ courseId, page = 1, limit = 50, all = false }) =>
       request(
         `/api/tests?course=${courseId}&page=${page}&limit=${limit}&all=${
           all ? '1' : '0'
         }`
       ),
-    get: (id, { withAnswers = true } = {}) =>
-      request(`/api/tests/${id}${withAnswers ? '?withAnswers=1' : ''}`),
+    get: (id) => request(`/api/tests/${id}`), // user gets sanitized version
     create: (d) => request('/api/tests', { method: 'POST', body: d }),
     update: (id, d) => request(`/api/tests/${id}`, { method: 'PUT', body: d }),
     remove: (id) => request(`/api/tests/${id}`, { method: 'DELETE' }),
+    submit: (id, answers) =>
+      request(`/api/tests/${id}/submit`, { method: 'POST', body: { answers } }),
+  },
+
+  certificates: {
+    listMine: () => request('/api/certificates'),
+    getByPublicId: (cid) => request(`/api/certificates/${cid}`),
+    issue: (payload) =>
+      request('/api/certificates', { method: 'POST', body: payload }),
   },
 };

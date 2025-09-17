@@ -5,6 +5,7 @@ import Layout from './components/layout/Layout';
 
 import Home from './pages/Home';
 import Courses from './pages/Courses';
+import CourseDetails from './pages/CourseDetails';
 import Profile from './pages/Profile';
 import AdminCourses from './pages/admin/AdminCourses';
 import AdminDashboard from './pages/admin/AdminDashboard';
@@ -26,6 +27,7 @@ export default function App() {
           <Route element={<Layout />}>
             <Route path='/' element={<Home />} />
             <Route path='/courses' element={<Courses />} />
+            <Route path='/courses/:id' element={<CourseDetails />} />
             <Route path='/profile' element={<Profile />} />
             <Route path='/admin/courses' element={<AdminCourses />} />
             <Route path='/admin/dashboard' element={<AdminDashboard />} />

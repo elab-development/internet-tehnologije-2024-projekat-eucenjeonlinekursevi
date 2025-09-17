@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { api } from '../utils/api';
 import SkeletonCard from '../components/common/SkeletonCard';
 import CourseCard from '../components/courses/CourseCard';
@@ -11,17 +12,25 @@ export default function Courses() {
   const [q, setQ] = useState('');
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState('');
+  const [certs, setCerts] = useState([]); // user's certificates
 
+  const navigate = useNavigate();
   const limit = 12;
 
   async function load() {
     setLoading(true);
     setErr('');
     try {
-      const data = await api.courses.list({ page, limit, q, all: false });
-      setItems(data.items || []);
-      setPages(data.pagination?.pages || 1);
-      setTotal(data.pagination?.total || 0);
+      // Load courses (published only for users)
+      const [coursesRes, certsRes] = await Promise.all([
+        api.courses.list({ page, limit, q, all: false }),
+        api.certificates.listMine().catch(() => ({ items: [] })), // be resilient
+      ]);
+
+      setItems(coursesRes.items || []);
+      setPages(coursesRes.pagination?.pages || 1);
+      setTotal(coursesRes.pagination?.total || 0);
+      setCerts(certsRes.items || []);
     } catch (e) {
       setErr(e.message || 'Failed to load courses');
     } finally {
@@ -33,8 +42,20 @@ export default function Courses() {
     load(); /* eslint-disable-next-line */
   }, [page, q]);
 
+  // Build a quick lookup: courseId -> true
+  const certifiedCourseIds = useMemo(() => {
+    const set = new Set();
+    for (const c of certs) {
+      const id = c?.course?._id || c?.course; // populated or plain ObjectId
+      if (id) set.add(String(id));
+    }
+    return set;
+  }, [certs]);
+
   const onOpenCourse = (course) => {
-    console.log('open course', course);
+    // If certified, do nothing (blocked)
+    if (certifiedCourseIds.has(String(course._id))) return;
+    navigate(`/courses/${course._id}`);
   };
 
   return (
@@ -72,9 +93,17 @@ export default function Courses() {
       ) : (
         <>
           <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4'>
-            {items.map((c) => (
-              <CourseCard key={c._id} course={c} onOpen={onOpenCourse} />
-            ))}
+            {items.map((c) => {
+              const certified = certifiedCourseIds.has(String(c._id));
+              return (
+                <CourseCard
+                  key={c._id}
+                  course={c}
+                  certified={certified}
+                  onOpen={onOpenCourse}
+                />
+              );
+            })}
           </div>
 
           {/* Pagination */}
