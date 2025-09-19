@@ -8,6 +8,7 @@ import authRoutes from './routes/auth.routes.js';
 import courseRoutes from './routes/course.routes.js';
 import testRoutes from './routes/test.routes.js';
 import certificateRoutes from './routes/certificate.routes.js';
+import adminRoutes from './routes/admin.routes.js';
 const app = express();
 
 app.use(
@@ -24,6 +25,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/courses', courseRoutes);
 app.use('/api/tests', testRoutes);
 app.use('/api/certificates', certificateRoutes);
+app.use('/api/admin', adminRoutes);
 
 const PORT = process.env.PORT || 4000;
 
