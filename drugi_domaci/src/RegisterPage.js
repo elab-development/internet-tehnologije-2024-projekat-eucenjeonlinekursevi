@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 const RegisterPage = () => {
-  const [role, setRole] = useState('korisnik'); // ili 'profesor'
+  const [role, setRole] = useState('korisnik');
   const [formData, setFormData] = useState({
     ime: '',
     prezime: '',

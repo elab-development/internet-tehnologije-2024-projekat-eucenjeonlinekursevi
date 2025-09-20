@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { fetchKurs } from './services/api';
+import { kursevi as dummyKursevi } from './dummydata';
 
 
 const KursPage = () => {
@@ -8,12 +8,8 @@ const KursPage = () => {
   const [kurs, setKurs] = useState(null);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const data = await fetchKurs(id);
-      setKurs(data);
-    };
-
-    fetchData();
+    const foundKurs = dummyKursevi.find(k => k.id === parseInt(id));
+    setKurs(foundKurs);
   }, [id]);
 
   if (!kurs) return <div>Loading...</div>;

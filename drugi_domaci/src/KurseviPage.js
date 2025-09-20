@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import KursCard from './KursCardPage';
+import { kursevi as dummyKursevi } from './dummydata';
 
 const KurseviPage = () => {
   const [kursevi, setKursevi] = useState([]);
@@ -9,16 +10,7 @@ const KurseviPage = () => {
   const itemsPerPage = 5;
 
   useEffect(() => {
-    const fetchKursevi = async () => {
-      try {
-        const response = await fetch('/api/kursevi');
-        setKursevi(response.data);
-      } catch (error) {
-        console.error("Greška pri učitavanju kurseva:", error);
-      }
-    };
-
-    fetchKursevi();
+    setKursevi(dummyKursevi);
   }, []);
 
   const filteredKursevi = kursevi.filter(kurs => {

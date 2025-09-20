@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { fetchKursevi } from './services/api';
+import { kursevi as dummyKursevi } from './dummydata';
 import KursCard from './KursCardPage';
 import './HomePage.css';
 import Modal from './Modal';
 import useSearch from './useSearch';
+
+
+
 
 const HomePage = () => {
   const [kursevi, setKursevi] = useState([]);
@@ -22,19 +25,9 @@ const HomePage = () => {
 };
 
   useEffect(() => {
-    const getKursevi = async () => {
-      try {
-        const data = await fetchKursevi();
-        setKursevi(data);
-      } catch (error) {
-        console.error('Greška pri učitavanju kurseva:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    getKursevi();
-  }, []);
+    setKursevi(dummyKursevi);
+    setLoading(false);
+}, []);
 
   const { searchTerm, setSearchTerm, filteredItems } = useSearch(kursevi, 'naziv');
 
@@ -70,7 +63,8 @@ const HomePage = () => {
         <Modal onClose={closeModal}>
           <h2>{selectedKurs.naziv}</h2>
           <p>{selectedKurs.opis}</p>
-          <button onClick={closeModal}>Zatvori</button>
+          <p>{selectedKurs.detalji}</p>
+          
         </Modal>
       )}
     </div>
