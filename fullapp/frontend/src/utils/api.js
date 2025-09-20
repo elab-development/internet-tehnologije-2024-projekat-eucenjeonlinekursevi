@@ -76,4 +76,8 @@ export const api = {
     issue: (payload) =>
       request('/api/certificates', { method: 'POST', body: payload }),
   },
+
+  admin: {
+    stats: () => request('/api/admin/stats'),
+  },
 };
